@@ -6,6 +6,7 @@ import pyautogui
 import threading
 import time
 import os
+import json
 
 
 recording = False
@@ -14,6 +15,9 @@ listener = None
 replay_count = 0  
 
 links = ["a", "b"]
+
+
+links = list(set(links))
 linkMap = {}
 
 def on_click(x, y, button, pressed):
@@ -77,29 +81,32 @@ def replay_clicks():
         x, y = map(int, click2)
         pyautogui.click(x, y) #get link
         time.sleep(2)
+        pyperclip.copy("")
 
-        click3 = (430, 469)
         pyautogui.hotkey("ctrl", "c") 
-        retrivedTest = pyperclip.paste()
-        print(retrivedTest)
+        retrivedText = pyperclip.paste()
 
-        linkMap[line] = retrivedTest
+        if retrivedText == "":
+            click2 = (1269, 161) #Repalce alternative pointer
+            x, y = map(int, click2)
+            pyautogui.click(x, y) #get link
+            time.sleep(2)
+            pyautogui.hotkey("ctrl", "c") 
+            retrivedText = pyperclip.paste()
+
+        print(retrivedText)
+        linkMap[line] = retrivedText
 
         progress_bar["value"] = i
         progress_label.config(text=f"{i} / {len(lines)}")
-        root.update_idletasks()
-    print(linkMap)
+        root.update_idletasks() 
+        print("="*50)
+        print(f"SRC Link : {line}")
+        print(f"ALT Link : {retrivedText}")
+        print("="*50)
 
-
-    
-    # for i, line in enumerate(lines, start=1):
-    #     x, y = map(int, line.strip().split(","))
-    #     pyautogui.click(x, y)
-    #     time.sleep(0.2)
-
-    #     progress_bar["value"] = i
-    #     progress_label.config(text=f"{i} / {len(lines)}")
-    #     root.update_idletasks()
+    with open("linkmap.json") as fo:
+        json.dump(linkMap, fo, indent=4)
 
     print("Replay finished.")
     messagebox.showinfo("Replay", f"Success ✅\nReplay count: {replay_count}")
@@ -119,7 +126,7 @@ tk.Button(button_frame, text="▶️", command=lambda: threading.Thread(target=r
 progress_bar = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
 progress_bar.pack(pady=5)
 
-progress_label = tk.Label(root, text="0 / 0")
+progress_label = tk.Label(root, text="0 / 0", width=20)
 progress_label.pack()
 
 root.mainloop()
