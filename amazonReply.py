@@ -68,7 +68,7 @@ def replay_clicks():
 
     for i, line in enumerate(links, start=1):
         pyperclip.copy(line)
-        click1 = (1704, 16)
+        click1 = (1704, 16)#new tab
         x, y = map(int, click1)
         pyautogui.click(x, y)   #new tab
         time.sleep(1)
@@ -77,32 +77,35 @@ def replay_clicks():
         pyautogui.press("enter")
         time.sleep(3)
 
-        click2 = (1269, 161)
+        click2 = (1269, 161)#get link left
         x, y = map(int, click2)
-        pyautogui.click(x, y) #get link
+        pyautogui.click(x, y) 
         time.sleep(2)
         pyperclip.copy("")
 
         pyautogui.hotkey("ctrl", "c") 
-        retrivedText = pyperclip.paste()
+        retrievedText = pyperclip.paste()
 
-        if retrivedText == "":
-            click2 = (1269, 161) #Repalce alternative pointer
-            x, y = map(int, click2)
-            pyautogui.click(x, y) #get link
+        if retrievedText == "":
+            click3 = (1269, 161) #get link right
+            x, y = map(int, click3)
+            pyautogui.click(x, y) 
             time.sleep(2)
             pyautogui.hotkey("ctrl", "c") 
-            retrivedText = pyperclip.paste()
+            retrievedText = pyperclip.paste()
 
-        print(retrivedText)
-        linkMap[line] = retrivedText
+        click4 = (1269, 161) #close tab
+        x, y = map(int, click4)
+        pyautogui.click(x, y) 
+        time.sleep(2)
+        linkMap[line] = retrievedText
 
         progress_bar["value"] = i
         progress_label.config(text=f"{i} / {len(lines)}")
         root.update_idletasks() 
         print("="*50)
         print(f"SRC Link : {line}")
-        print(f"ALT Link : {retrivedText}")
+        print(f"ALT Link : {retrievedText}")
         print("="*50)
 
     with open("linkmap.json") as fo:
