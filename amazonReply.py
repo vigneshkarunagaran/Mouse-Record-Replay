@@ -14,6 +14,8 @@ listener = None
 replay_count = 0  
 
 links = ["a", "b"]
+linkMap = {}
+
 def on_click(x, y, button, pressed):
     global file_path
     if recording and pressed:
@@ -81,9 +83,12 @@ def replay_clicks():
         retrivedTest = pyperclip.paste()
         print(retrivedTest)
 
+        linkMap[line] = retrivedTest
+
         progress_bar["value"] = i
         progress_label.config(text=f"{i} / {len(lines)}")
         root.update_idletasks()
+    print(linkMap)
 
 
     
